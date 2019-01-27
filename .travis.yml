@@ -1,7 +1,6 @@
 language: java
 
 after_success:
-- echo $GPG_EXECUTABLE
 - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
 - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
 - mvn clean deploy --settings settings.xml -DskipTests=true -B -U -Prelease
