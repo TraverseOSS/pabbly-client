@@ -5,8 +5,29 @@
 	<artifactId>pabbly-client</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0.0</version>
-	<name>pabbly-client Maven Webapp</name>
-	<url>http://maven.apache.org</url>
+	<name>Java Pabbly Client</name>
+	<url>https://github.com/TraverseOSS/pabbly-client</url>
+	<description>A java client to be used to interact with pabbly.com</description>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Ryan Kazokas</name>
+			<email>rkazokas@channelape.com</email>
+			<organization>TraverseOSS</organization>
+			<organizationUrl>https://traverse-tms.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git://github.com/TraverseOSS/pabbly-client.git</connection>
+		<developerConnection>scm:git:ssh://github.com/TraverseOSS/pabbly-client.git</developerConnection>
+		<url>https://github.com/TraverseOSS/pabbly-client/tree/master</url>
+	</scm>
 	<distributionManagement>
 		<snapshotRepository>
 			<id>ossrh</id>
@@ -48,7 +69,77 @@
 		</dependency>
 
 	</dependencies>
+
 	<build>
 		<finalName>pabbly-client</finalName>
 	</build>
+	<profiles>
+		<!-- Activate using the release property: mvn clean install -Prelease -->
+		<profile>
+			<id>release</id>
+			<activation>
+				<property>
+					<name>release</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<!-- To release to Maven central -->
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.8</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+					<!-- To generate javadoc -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>3.0.1</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.10.4</version>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<!-- To sign the artifacts -->
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.6</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>

@@ -1,7 +1,11 @@
 language: java
+
 after_success:
-- mvn deploy --settings settings.xml -DskipTests=true -B
+- echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
+- echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+- mvn clean deploy --settings settings.xml -DskipTests=true -B -U -Prelease
 env:
   global:
   - SONATYPE_USERNAME=rkazokas
   - secure: Cyr/lgSkXKS6besmHq78cNf2P7eyc1tALvJHvtKSPqOm/cpMRHtRFvvf3Donmle9RnR5xQKJz49QXc3ybbiUbV5T4aSLYLg4PjEWIE/dhLg7ybdm/mJ2bAYHou3I0s/Uvi4vjKL+4AIwKDZZXsV6+au2CasHVTzSPhDuBPkpaEhTrZaYv2rlWyxr6EmP4AiT4bJPspHZiu8YdEVCwi2nCwHFK+fi4Rlni3m0c8b2fO+wahSDpcLiEliIDIFzOmXEz+WWgrm3KXgbOSwcRNTWR6UySGNKVyO+zcM95pFzdvghMcT3Z5l8Wh7fCl/fBZK1DunIjQGOpSxNsq1fiENpuJXHBF9ixe3qO69Pyg5ZCnGBSoOc4VUVEPfmm9rZremPmqwxa3hZf6pQAqCDVl/suCROR3HnEa7AprCo+Xz36vsaXW57FqDN4Y+LkfVK9pFu8PN3VGZBU6uikdrZABqpbBydQgKxL+e/H3kOb0omuXQ+ur7PqYlBAjSpZZVpv9v4ICpCRE5LB6lCtt5GDbS+fYL1GlsQgUixiPhNySistAVX2jcOynoOI1rGBaAPkktyWeq7iv3YK0qFR3gCCIqTeWu6DyV/Du1Pz+5KcIUyScYL+gGmSx9HVp1X+QTFtdd6VBiK91+c3LksnklBQWQCHmO3NAf7ZUB5hc6SlAGuIUM=
+  - secure: a6w/JNz/iIWmOtQQP9Ud/bFTYWZnUcUUi3kt5qWJxC/wnGq0J/A/EhQ4Mm5Ww7xlQsG3w5wUBO2Pm8GvIVKdMkV2vjB8Bn+B7jCj64AoOo+W+zLBu+qH/49hhjn85gE6X5Y1WeWQfXV9BNEGWMt1guMeIqJvnAmTVlik4YpdDCEoyxhXmjiErYOzL1vk62tMYvvy09BviATwlZVN8FujyhGD9A1CTHUKJa5m32fgtd+dxB9FjnOK6+TMjyJY07czIbzkANkPfq8skLzAi9XRHcrpmkrWOWT+pafFsuzwTLRCv3ZiG+ZQbCc2KbktGROfAq5lVKP+/NSCevf9vbVJHrsXp4njUjI+5UQ91J/kuxkQe6Hd9mSPMrStF6xWCSiDctfvK6uD1yApMQyHIN/uGV6u+caChgwgrd9hIE1W9/s7DsEpAoq+o7kzMNcG0hUcoTLORhyW9nhAtc4UcFcljzQmItHpU0syBSMBPX/eaKhRGtOHwwGb/B+X0mtVBJ7q/4z1SNTxMgxD6Ke7w4j7e/maC9VokjiZhBWjaNoTX8YtwKx1+CgqTRRjyjdXl67WjUMAsGrRmRL+EwftzMjKc436fhT/L50QxgUhYFg7mc3wROZjz5IeA7kn3f11R3Fv5TdPp/Z7e2/q2UEDUir564X8RN2iPWwexREH5wVi9Fo=

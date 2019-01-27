@@ -14,5 +14,16 @@
 	<pluginGroups></pluginGroups>
 	<proxies></proxies>
 	<mirrors></mirrors>
-	<profiles></profiles>
+	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<gpg.executable>gpg</gpg.executable>
+				<gpg.passphrase>${env.GPG_PASSPHRASE}</gpg.passphrase>
+			</properties>
+		</profile>
+	</profiles>
 </settings>
