@@ -2,6 +2,7 @@ package com.pabbly;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -155,4 +156,65 @@ public class PabblyClientTest {
 		assertEquals("5a4dc33d8f40f61da0091c1b", verifiedSubscription.getData().getPlan().getProductId());
 	}
 
+	@Test
+	public void givenSomePabblyClientWithValidAPIKeyAndSecretKeyAndSubscriptionIdWhenGettingSubscriptionThenReturnSubscription()
+			throws Exception {
+		final String subscriptionId = "02348273847298374";
+
+		final String expectedResponseBody = "{\r\n" + "\"status\": \"success\",\r\n"
+				+ "\"message\": \"Subscription data\",\r\n" + "\"data\": {\r\n"
+				+ "         \"customer_id\": \"5a4b78053152df337d841348\",\r\n"
+				+ "         \"email_id\": \"LanceSCrews@teleworm.us\",\r\n"
+				+ "         \"product_id\": \"5a4b5e6ecb9bc82fd2b4bfef\",\r\n"
+				+ "         \"plan_id\": \"5a4b5e7fcb9bc82fd2b4bff0\",\r\n"
+				+ "         \"user_id\": \"5a4b5db47cfab6872a7feafa\",\r\n" + "         \"status\": \"live\",\r\n"
+				+ "         \"quantity\": \"1\",\r\n" + "         \"amount\": 99,\r\n"
+				+ "         \"starts_at\": \"2018-01-02T12:16:05.055Z\",\r\n"
+				+ "         \"activation_date\": \"2018-01-02T12:16:05.055Z\",\r\n"
+				+ "         \"expiry_date\": \"\",\r\n" + "         \"trial_days\": 0,\r\n"
+				+ "         \"trial_expiry_date\": \"\",\r\n" + "         \"next_billing_date\": \"\",\r\n"
+				+ "         \"last_billing_date\": \"2018-01-02T12:16:05.508Z\",\r\n" + "         \"plan\": {\r\n"
+				+ "                \"product_id\": \"5a4b5e6ecb9bc82fd2b4bfef\",\r\n"
+				+ "                \"user_id\": \"5a4b5db47cfab6872a7feafa\",\r\n"
+				+ "                \"plan_name\": \"Life Time Plan\",\r\n"
+				+ "                \"plan_code\": \"lifetime\",\r\n" + "                \"price\": \"99\",\r\n"
+				+ "                \"billing_period\": \"y\",\r\n"
+				+ "                \"billing_period_num\": \"1\",\r\n"
+				+ "                \"billing_cycle\": \"lifetime\",\r\n"
+				+ "                \"billing_cycle_num\": null,\r\n" + "                \"trial_period\": null,\r\n"
+				+ "                \"setup_fee\": null,\r\n" + "                \"plan_description\": null,\r\n"
+				+ "                \"createdAt\": \"2018-01-02T10:27:11.365Z\",\r\n"
+				+ "                \"updatedAt\": \"2018-01-02T10:27:11.365Z\",\r\n"
+				+ "                \"id\": \"5a4b5e7fcb9bc82fd2b4bff0\"\r\n" + "                 },\r\n"
+				+ "        \"setup_fee\": null,\r\n" + "        \"payment_terms\": \"\",\r\n"
+				+ "        \"pcustomer_id\": \"5a4b776f7cfab6872a7feb06\",\r\n"
+				+ "        \"createdAt\": \"2018-01-02T12:16:05.503Z\",\r\n"
+				+ "        \"updatedAt\": \"2018-01-02T12:16:05.535Z\",\r\n"
+				+ "        \"payment_method\": \"5a4b78053152df337d841346\",\r\n"
+				+ "        \"id\": \"5a4b78053152df337d841349\"\r\n" + "       }\r\n" + "}";
+		stubFor(get(urlEqualTo("/" + PabblyClient.SUBSCRIPTION_PATH + "/" + subscriptionId))
+				.withHeader(HttpHeaders.ACCEPT, equalTo(MediaType.APPLICATION_JSON))
+				.willReturn(aResponse().withStatus(200).withBody(expectedResponseBody)
+						.withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)));
+		final PabblyResponse<Subscription> subscription = pabblyClient.getSubscription(subscriptionId);
+		assertNotNull(subscription);
+		assertEquals("success", subscription.getStatus());
+		assertEquals("Subscription data", subscription.getMessage());
+		assertEquals("5a4b78053152df337d841348", subscription.getData().getCustomerId());
+		assertEquals("LanceSCrews@teleworm.us", subscription.getData().getEmailId());
+		assertEquals("5a4b5e7fcb9bc82fd2b4bff0", subscription.getData().getPlanId());
+		assertEquals("5a4b5db47cfab6872a7feafa", subscription.getData().getUserId());
+		assertEquals(new Double(99.0), subscription.getData().getAmount());
+		assertEquals(Long.valueOf(1), subscription.getData().getQuantity());
+
+		assertEquals("lifetime", subscription.getData().getPlan().getBillingCycle());
+		assertNull(subscription.getData().getPlan().getBillingCycleNum());
+		assertEquals("y", subscription.getData().getPlan().getBillingPeriod());
+		assertFalse(subscription.getData().getPlan().getPlanActive());
+		assertEquals("lifetime", subscription.getData().getPlan().getPlanCode());
+		assertNull(subscription.getData().getPlan().getPlanDescription());
+		assertEquals("Life Time Plan", subscription.getData().getPlan().getPlanName());
+		assertEquals(new Double(99.0), subscription.getData().getPlan().getPrice());
+		assertEquals("5a4b5e6ecb9bc82fd2b4bfef", subscription.getData().getPlan().getProductId());
+	}
 }
