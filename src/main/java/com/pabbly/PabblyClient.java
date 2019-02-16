@@ -20,6 +20,7 @@ import com.pabbly.model.Subscription;
 import com.pabbly.model.VerifyHostedPageRequest;
 
 public class PabblyClient {
+	static final String SUBSCRIPTION_PATH = "subscription";
 	static final String VERIFY_HOSTED_PATH = "verifyhosted";
 	private static final String CLIENT_WAS_PROVIDED_MESSAGE = "Client was provided, so using provided one. Omit the client if you want the pabbly-client to build it.";
 	private static final Logger LOG = Logger.getLogger(PabblyClient.class.getName());
@@ -100,6 +101,13 @@ public class PabblyClient {
 				MediaType.APPLICATION_JSON);
 		final Response response = client.target(this.apiUrl).path(VERIFY_HOSTED_PATH)
 				.request(MediaType.APPLICATION_JSON).post(entity);
+		return response.readEntity(new GenericType<PabblyResponse<Subscription>>() {
+		});
+	}
+
+	public PabblyResponse<Subscription> getSubscription(final String subscriptionId) {
+		final Response response = client.target(this.apiUrl).path(SUBSCRIPTION_PATH).path(subscriptionId)
+				.request(MediaType.APPLICATION_JSON).get();
 		return response.readEntity(new GenericType<PabblyResponse<Subscription>>() {
 		});
 	}
