@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class Subscription {
 
+	private String id;
 	@XmlAttribute(name = "customer_id")
 	private String customerId;
 	@XmlAttribute(name = "email_id")
@@ -27,6 +28,14 @@ public class Subscription {
 	private Long quantity;
 	private Double amount;
 	private Plan plan;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(final String id) {
+		this.id = id;
+	}
 
 	public String getCustomerId() {
 		return customerId;

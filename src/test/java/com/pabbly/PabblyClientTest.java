@@ -144,6 +144,7 @@ public class PabblyClientTest {
 		assertEquals("5a4b60497cfab6872a7feafb", verifiedSubscription.getData().getUserId());
 		assertEquals(new Double(50), verifiedSubscription.getData().getAmount());
 		assertEquals(Long.valueOf(1), verifiedSubscription.getData().getQuantity());
+		assertEquals("5a5471eba872a21608b06106", verifiedSubscription.getData().getId());
 
 		assertEquals("lifetime", verifiedSubscription.getData().getPlan().getBillingCycle());
 		assertNull(verifiedSubscription.getData().getPlan().getBillingCycleNum());
@@ -206,6 +207,7 @@ public class PabblyClientTest {
 		assertEquals("5a4b5db47cfab6872a7feafa", subscription.getData().getUserId());
 		assertEquals(new Double(99.0), subscription.getData().getAmount());
 		assertEquals(Long.valueOf(1), subscription.getData().getQuantity());
+		assertEquals("5a4b78053152df337d841349", subscription.getData().getId());
 
 		assertEquals("lifetime", subscription.getData().getPlan().getBillingCycle());
 		assertNull(subscription.getData().getPlan().getBillingCycleNum());
