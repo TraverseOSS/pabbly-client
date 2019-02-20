@@ -1,6 +1,7 @@
 # Java Pabbly Client
 Client for use with [https://www.pabbly.com/](https://www.pabbly.com/)
 
+Latest master build: [![Build Status](https://travis-ci.com/TraverseOSS/pabbly-client.svg?branch=master)](https://travis-ci.com/TraverseOSS/pabbly-client)
 
 ## Usage
 
@@ -13,20 +14,21 @@ The only required fields are apiKey and secretKey:
 ```
 
 ## Supported Operations
-Create new Plan for a product
+
+#### Create new Plan for a product
 
 ```
 	pabblyClient.createPlan(plan);
 ```
 
-Verify Hosted Page
+#### Verify Hosted Page
 
 ```
 	final String hostedPage = "5a4dc3548f40f61da0091c1c";
 	pabblyClient.verifHostedPage(hostedPage);
 ```
 
-Get Subscription
+#### Get Subscription
 
 ```
 	final String subscriptionId = "5a4dc33d8f40f61da0091c1b"
