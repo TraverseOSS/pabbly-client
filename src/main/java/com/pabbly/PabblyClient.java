@@ -16,8 +16,12 @@ import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.pabbly.model.PabblyResponse;
 import com.pabbly.model.Plan;
+import com.pabbly.model.Subscription;
+import com.pabbly.model.VerifyHostedPageRequest;
 
 public class PabblyClient {
+	static final String SUBSCRIPTION_PATH = "subscription";
+	static final String VERIFY_HOSTED_PATH = "verifyhosted";
 	private static final String CLIENT_WAS_PROVIDED_MESSAGE = "Client was provided, so using provided one. Omit the client if you want the pabbly-client to build it.";
 	private static final Logger LOG = Logger.getLogger(PabblyClient.class.getName());
 	private final String apiKey;
@@ -84,12 +88,28 @@ public class PabblyClient {
 
 	public PabblyResponse<Plan> createPlan(final Plan plan) {
 		final Entity<Plan> entity = Entity.entity(plan, MediaType.APPLICATION_JSON);
-
 		final Response response = client.target(this.apiUrl).path(PLAN_CREATE_PATH).request(MediaType.APPLICATION_JSON)
 				.post(entity);
 		return response.readEntity(new GenericType<PabblyResponse<Plan>>() {
 		});
+	}
 
+	public PabblyResponse<Subscription> verifyHostedPage(final String hostedPage) {
+		final VerifyHostedPageRequest verifyHostedPageRequest = new VerifyHostedPageRequest();
+		verifyHostedPageRequest.setHostedpage(hostedPage);
+		final Entity<VerifyHostedPageRequest> entity = Entity.entity(verifyHostedPageRequest,
+				MediaType.APPLICATION_JSON);
+		final Response response = client.target(this.apiUrl).path(VERIFY_HOSTED_PATH)
+				.request(MediaType.APPLICATION_JSON).post(entity);
+		return response.readEntity(new GenericType<PabblyResponse<Subscription>>() {
+		});
+	}
+
+	public PabblyResponse<Subscription> getSubscription(final String subscriptionId) {
+		final Response response = client.target(this.apiUrl).path(SUBSCRIPTION_PATH).path(subscriptionId)
+				.request(MediaType.APPLICATION_JSON).get();
+		return response.readEntity(new GenericType<PabblyResponse<Subscription>>() {
+		});
 	}
 
 }
